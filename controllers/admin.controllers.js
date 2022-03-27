@@ -17,3 +17,24 @@ exports.createCategories = async (req, res) => {
   await Categories.create(post);
   res.json(post);
 };
+
+
+exports.checkoutConfirm = async (req, res) => {
+  const transaction = req.body;
+  const permission = req.user.permission;
+  if (permission == "user") {
+    res.status(404).json("404 not found");
+  } else {
+    await Transactions.update(
+      { status: "complete" },
+      { where: { id: transaction.TransactionId } }
+    );
+
+    await Orders.update(
+      { status: "complete" },
+      { where: { TransactionId: transaction.TransactionId } }
+    ).then((response) => {
+      res.json("checkout confirm complete");
+    });
+  }
+}

@@ -86,6 +86,24 @@ exports.updateProfile = async (req, res) => {
     res.status(200).json({ success: true, msg: "Update profile successfuly" });
   } catch (err) {
     console.log({ success: false, msg: err });
-    res.status(400).json({ success: false, msg: err });
+    res.status(400).json({ success:false, msg: err });
   }
 };
+
+exports.getPublicProfile = async( req, res) =>{
+  const userId = req.params.userId;
+  try {
+    const {firstName, lastName, avartar, about} = await Users.findOne({where:{id:userId}}).then(resp=>{
+      if(resp!=null){
+        return resp
+      }else{
+        return {firstName:null, lastName:null, avartar:null, about:null}
+      }
+    })
+    const data = {firstName, lastName, avartar, about}
+    res.status(200).json({success:true, msg:"get user data successfuly", data:data});
+  } catch(err){
+    console.log({success:false, msg:err});
+    res.status(400).json({success:false, msg:"can't get user data"})
+  }
+} 

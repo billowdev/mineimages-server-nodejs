@@ -34,12 +34,12 @@ module.exports = (sequelize, DataTypes) => {
     visible: {
       type: DataTypes.ENUM(["public", "private"]),
       allowNull: false,
-      defaultValue: "private",
+      defaultValue: "active",
     },
     status: {
       type: DataTypes.ENUM(["active", "inactive"]),
       allowNull: false,
-      defaultValue: "inactive",
+      defaultValue: "active",
     },
     remove: {
       type: DataTypes.ENUM(["YES", "NO"]),

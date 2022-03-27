@@ -6,18 +6,20 @@ const {
   createAddressUser,
   createPaymentUser,
   updateProfile,
-  getTestApi
+  getTestApi,
+  getPublicProfile,
 } = require("../controllers/user.controllers");
-
 
 const {
   getImagesUser,
   createImageUser,
   updateImageUser,
-  uploadImageAvartar
+  uploadImageAvartar,
 } = require("../controllers/images.controllers");
 
 // ----------------- USER route ----------------- \\
+// ----------------- GET DATA USER ----------------- \\
+router.get("/profile/:userId", validateToken, getPublicProfile);
 
 // ----------------- GET OWN IMAGES DATA ----------------- \\
 router.get("/images", validateToken, getImagesUser);
@@ -43,6 +45,5 @@ router.patch("/avartar/upload", validateToken, uploadImageAvartar);
 
 // ----------------- PUT TO Update Image ----------------- \\
 router.patch("/profile", validateToken, updateProfile);
-
 
 module.exports = router;

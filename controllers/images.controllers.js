@@ -23,9 +23,9 @@ exports.getImagesUser = async (req, res) => {
     const total = await Images.count({ where: { UserId: reqUserId } });
 
     let totalPages = total / perPage;
-    let data;
+    let images;
     if (search && sortColumn) {
-      data = await Images.findAll({
+      images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
         where: {
@@ -37,7 +37,7 @@ exports.getImagesUser = async (req, res) => {
         order: [[sortColumn, sortDirection]],
       });
     } else if (search) {
-      data = await Images.findAll({
+      images = await Images.findAll({
         where: {
           UserId: reqUserId,
           name: {
@@ -46,25 +46,29 @@ exports.getImagesUser = async (req, res) => {
         },
       });
     } else if (sortColumn) {
-      data = await Images.findAll({
+      images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
         where: { UserId: reqUserId },
         order: [[sortColumn, sortDirection]],
       });
     } else {
-      data = await Images.findAll({
+      images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
         where: { UserId: reqUserId },
       });
     }
-    res.json({
-      page: page,
-      per_page: perPage,
-      total_pages: totalPages,
-      total: total,
-      data,
+    res.status(200).json({
+      success: true,
+      msg: "get image success",
+      data: {
+        page: page,
+        per_page: perPage,
+        total_pages: totalPages,
+        total: total,
+        images,
+      },
     });
   } catch (err) {
     console.log("Error at get Images user controllers", err);
@@ -191,27 +195,33 @@ exports.getAllImage = async (req, res) => {
     where: { visible: "public", status: "active" },
     raw: true,
   });
-  let publicIds = []
-  image.forEach(element => {
-    publicIds.push(element.publicId)
+  let publicIds = [];
+  image.forEach((element) => {
+    publicIds.push(element.publicId);
   });
-  // console.log(publicIds);
-  
   return res.send(publicIds);
 };
 
-exports.getImageDetail = async (req, res) =>{
-  const {imgid} = req.body
-  console.log(imgid)
-  const {id, publicId, name, detail, pathWatermark, price, UserId} = await Images.findOne({
-    where:{publicId:imgid}
-  })
-  const {firstName} = await Users.findOne({where:{id:UserId}})
+exports.getImageDetail = async (req, res) => {
+  const { imgid } = req.body;
+  console.log(imgid);
+  const { id, publicId, name, detail, pathWatermark, price, UserId } =
+    await Images.findOne({
+      where: { publicId: imgid },
+    });
+  const { firstName } = await Users.findOne({ where: { id: UserId } });
 
-  return res.status(200).send({id, publicId, name, detail, pathWatermark, price, owner:firstName})
+  return res.status(200).send({
+    id,
+    publicId,
+    name,
+    detail,
+    pathWatermark,
+    price,
+    owner: firstName,
+  });
+};
 
-}
- 
 exports.getSearchImages = async (req, res) => {
   const response = await axios.get(BASE_URL + "/resources/search", {
     auth,

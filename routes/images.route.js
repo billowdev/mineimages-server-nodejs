@@ -1,11 +1,8 @@
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const express = require("express");
 const router = express.Router();
-const { Images, Categories } = require("../models");
-const { cloudinary } = require("../utils/cloudinary");
 
 const {
-  getAllImagesUserOwned,
   getImageById,
   createImageUser,
   uploadImageByUser,
@@ -14,7 +11,7 @@ const {
 } = require("../controllers/images.controllers");
 
 
-router.get("/", getAllImage);
+router.get("/", getAllImage);  // display to public
 router.get("/search", getAllImage);
 router.post("/detail", getImageDetail);
 
