@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     visible: {
       type: DataTypes.ENUM(["public", "private"]),
       allowNull: false,
-      defaultValue: "active",
+      defaultValue: "public",
     },
     status: {
       type: DataTypes.ENUM(["active", "inactive"]),

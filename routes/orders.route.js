@@ -7,14 +7,17 @@ const { Op } = require("sequelize");
 const {
   getAllOrders,
   createUserOrder,
-  checkoutOrder
+  checkoutOrder,
+  getOncartOrders
 } = require("../controllers/orders.controllers");
 
 router.get("/", validateToken, getAllOrders);
 
+router.get("/cart", validateToken, getOncartOrders);
+
 router.post("/", validateToken, createUserOrder);
 
-router.post("/checkout", validateToken, checkoutOrder);
+router.get("/checkout", validateToken, checkoutOrder);
 
 
 module.exports = router;

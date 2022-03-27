@@ -1,6 +1,7 @@
 const { Orders, Transactions, Images, Users } = require("../models");
 const Op = require("sequelize").Op;
 const { conn } = require("../config/rawQueryConfig");
+const { response } = require("express");
 
 exports.getAllOrders = async (req, res) => {
   try {
@@ -88,8 +89,6 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-
-
 exports.createUserOrder = async (req, res) => {
   const ImageId = req.body.dataImage.id; // ภาพที่ซื้อ
   const UserId = req.user.id; // คนซื้อ
@@ -139,11 +138,11 @@ exports.createUserOrder = async (req, res) => {
       },
     });
     const imageIsExist = await Images.findOne({
-      where:{
-        UserId:UserId,
-        id:ImageId
-      }
-    })
+      where: {
+        UserId: UserId,
+        id: ImageId,
+      },
+    });
 
     if (!orderIsExist && !imageIsExist) {
       Orders.create({
@@ -152,17 +151,22 @@ exports.createUserOrder = async (req, res) => {
         UserId: UserId,
       })
         .then((response) => {
-          res.json({success:true, msg: "create order successfully", data: response });
+          res.json({
+            success: true,
+            msg: "create order successfully",
+            data: response,
+          });
         })
         .catch((err) => {
           if (err) {
-            res.status(400).json({success:false, error: err });
+            res.status(400).json({ success: false, error: err });
           }
         });
     } else {
-      res.status(201).json(
-        {success:false, msg:"this image has already oncart or image already on transaction or you have alreay own this image "}
-      );
+      res.status(201).json({
+        success: false,
+        msg: "this image has already oncart or image already on transaction or you have alreay own this image ",
+      });
     }
   } else {
     res.json({
@@ -203,13 +207,13 @@ exports.checkoutOrder = async (req, res) => {
           },
         }
       ).then((response) => {
-        res.json({ text: "checkout order status pending", data: response });
+        res.status(200).json({success:true, msg: "order has checkout"});
       });
     } else {
       const transaction = await Transactions.create({ UserId: UserId });
 
       if (!transaction) {
-        res.status(500).json("something wrong");
+        res.status(400).json("something wrong");
       } else {
         await Orders.update(
           {
@@ -223,39 +227,62 @@ exports.checkoutOrder = async (req, res) => {
             },
           }
         ).then((response) => {
-          res.json({ text: "checkout order status pending", data: response });
+          res.status(200).json({success:true, msg: "order has checkout"});
         });
       }
     }
   } else {
-    res.json("cart null");
+    res.status(201).json({success:false, msg:"null"});
   }
-}
+};
 
+exports.getOncartOrders = async (req, res) => {
+  try {
+    const reqUserId = req.user.id;
+    const oncart = await Orders.findAll({
+      where: { status: "oncart", UserId: reqUserId },
+      attributes: {
+        exclude: ["TransactionId", "UserId", "ImageId"],
+      },
+      include: [
+        {
+          model: Images,
+          require: true,
+          attributes: ["name", "detail", "pathWatermark"],
+        },
+        {
+          model: Users,
+          require: true,
+          attributes: ["firstName"],
+        },
+      ],
+      raw: true,
+    });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    if (oncart.length != 0) {
+      // console.log(oncart[0]['Image.pathWatermark'])
+      // console.log(oncart[0])
+      let totalItem = oncart.length;
+      let totalPrice = 0.0;
+      oncart.forEach((element) => {
+        totalPrice += parseFloat(element.price);
+      });
+      res.status(200).json({
+        success: true,
+        msg: "order on cart success",
+        data: { oncart, totalItem, totalPrice },
+      });
+    }
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: `error at order controller "getOncartOrders" : ${err}`,
+    });
+    response
+      .status(400)
+      .json({ success: false, msg: "can't get oncart orders" });
+  }
+};
 
 // ===========================================================
 
