@@ -8,16 +8,19 @@ const {
   getAllOrders,
   createUserOrder,
   checkoutOrder,
-  getOncartOrders
+  getOncartOrders,
+  getCompleteOrders
 } = require("../controllers/orders.controllers");
 
 router.get("/", validateToken, getAllOrders);
 
 router.get("/cart", validateToken, getOncartOrders);
+router.get("/complete", validateToken, getCompleteOrders);
 
 router.post("/", validateToken, createUserOrder);
 
 router.get("/checkout", validateToken, checkoutOrder);
+
 
 
 module.exports = router;

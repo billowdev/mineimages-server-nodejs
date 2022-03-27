@@ -284,6 +284,52 @@ exports.getOncartOrders = async (req, res) => {
   }
 };
 
+exports.getCompleteOrders = async(req,res) =>{
+  try {
+    const reqUserId = req.user.id;
+    const complete = await Orders.findAll({
+      where: { status: "complete", UserId: reqUserId },
+      attributes: {
+        exclude: ["TransactionId", "UserId", "ImageId"],
+      },
+      include: [
+        {
+          model: Images,
+          require: true,
+          attributes: ["name", "detail", "pathWatermark", "pathOrigin"],
+        },
+        {
+          model: Users,
+          require: true,
+          attributes: ["firstName"],
+        },
+      ],
+      raw: true,
+    });
+
+    if (complete.length != 0) {
+      // console.log(complete[0]['Image.pathWatermark'])
+      // console.log(complete)
+      let totalItem = complete.length;
+      res.status(200).json({
+        success: true,
+        msg: "order on cart success",
+        data: { complete, totalItem},
+      });
+    } else{
+      res.status(201).json({success:false, msg:"have no order complete"})
+    }
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: `error at order controller "getCompleteOrders" : ${err}`,
+    });
+    response
+      .status(400)
+      .json({ success: false, msg: "can't get complete orders" });
+  }
+}
+
 // ===========================================================
 
 // const listOrderOncart = await Orders.findAll({
