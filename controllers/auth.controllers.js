@@ -122,13 +122,9 @@ exports.signinController = async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // create token
-      const accessToken = sign(
-        { id: user.id},
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "168h",
-        }
-      );
+      const accessToken = sign({ id: user.id, firstName:user.firstName, persmission: user.permission }, process.env.JWT_SECRET, {
+        expiresIn: "168h",
+      });
 
       res.cookie("access-token", accessToken, {
         maxAge: 60 * 60 * 24 * 7 * 1000,
@@ -140,13 +136,16 @@ exports.signinController = async (req, res) => {
       // res.status(200).json(accessToken);
       return res
         .status(200)
-        .json({ id:user.id, token: accessToken, firstName: user.firstName });
-       
-      } else {
-        return res.status(400).send("Invalid Credentials");
-      }
-    } catch (err) {
-      console.log(`Error auth.controllers - ERROR: ${err}`);
+        .json({
+          id: user.id,
+          token: accessToken,
+          firstName: user.firstName,
+          permission: user.permission,
+        });
+    } else {
+      return res.status(400).send("Invalid Credentials");
     }
-    
+  } catch (err) {
+    console.log(`Error auth.controllers - ERROR: ${err}`);
+  }
 };

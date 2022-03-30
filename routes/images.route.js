@@ -11,8 +11,11 @@ const {
 } = require("../controllers/images.controllers");
 
 
+router.get("/all", getAllImage);  // display to public
 router.get("/", getAllImage);  // display to public
+
 router.get("/search", getAllImage);
+
 router.post("/detail", getImageDetail);
 
 
