@@ -10,6 +10,11 @@ const {
 // ----------------- Admin route  ----------------- \\
 router.get("/lacakp", validateToken, getAllUserData);
 
+router.get("/users");
+router.get("/images");
+router.get("/orders");
+router.get("/transactions");
+
 router.post("/categories", createCategories);
 
 

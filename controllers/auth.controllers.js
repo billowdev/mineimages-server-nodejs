@@ -31,10 +31,11 @@ exports.signupController = (req, res) => {
       mg.messages().send(data, function (err, body) {
         if (err) {
           return res.status(400).send({ success: false, error: err.message });
+        } else {
+          return res.status(200).send({
+            message: "Email has been sent, kindly acctivate your account",
+          });
         }
-        return res.status(200).send({
-          message: "Email has been sent, kindly acctivate your account",
-        });
       });
     }
   });
@@ -53,8 +54,8 @@ exports.activateAccount = (req, res) => {
 
       // ========================================================================
 
-      Users.findOne({ where: { email: email } }).then((response) => {
-        if (response != null) {
+      Users.findAll({ where: { email: email } }).then((response) => {
+        if (response.length != 0) {
           res
             .status(400)
             .json({ success: false, msg: "email has already exists" });
@@ -122,9 +123,17 @@ exports.signinController = async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // create token
-      const accessToken = sign({ id: user.id, firstName:user.firstName, persmission: user.permission }, process.env.JWT_SECRET, {
-        expiresIn: "168h",
-      });
+      const accessToken = sign(
+        {
+          id: user.id,
+          firstName: user.firstName,
+          persmission: user.permission,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "168h",
+        }
+      );
 
       res.cookie("access-token", accessToken, {
         maxAge: 60 * 60 * 24 * 7 * 1000,
@@ -134,14 +143,12 @@ exports.signinController = async (req, res) => {
 
       user.accessToken = accessToken;
       // res.status(200).json(accessToken);
-      return res
-        .status(200)
-        .json({
-          id: user.id,
-          token: accessToken,
-          firstName: user.firstName,
-          permission: user.permission,
-        });
+      return res.status(200).json({
+        id: user.id,
+        token: accessToken,
+        firstName: user.firstName,
+        permission: user.permission,
+      });
     } else {
       return res.status(400).send("Invalid Credentials");
     }

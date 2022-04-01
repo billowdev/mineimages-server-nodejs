@@ -7,7 +7,8 @@ const {
   createImageUser,
   uploadImageByUser,
   getAllImage,
-  getImageDetail
+  getImageDetail,
+  patchImageData
 } = require("../controllers/images.controllers");
 
 
@@ -24,6 +25,8 @@ router.get("/byId/:id", getImageById);
 router.post("/", createImageUser);
 
 router.post("/upload", validateToken,  uploadImageByUser);
+
+router.patch("/", validateToken, patchImageData);
 
 
 

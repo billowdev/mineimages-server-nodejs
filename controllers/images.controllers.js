@@ -59,6 +59,11 @@ exports.getImagesUser = async (req, res) => {
         where: { UserId: reqUserId },
       });
     }
+
+    //  let images = await Images.findAll({
+    //   where: { UserId: reqUserId },
+    // });
+
     res.status(200).json({
       success: true,
       msg: "get image success",
@@ -230,4 +235,17 @@ exports.getSearchImages = async (req, res) => {
     },
   });
   return res.send(response.data);
+};
+
+exports.patchImageData = async (req, res) => {
+  console.log(req.body)
+  try {
+    const data = req.body;
+    const resp = await Images.update(data, { where: { id: req.body.id } });
+    console.log(resp)  
+    res.status(200).json({ success: true, msg: "Update images successfuly" });
+  } catch (err) {
+    console.log({ success: false, msg: err });
+    res.status(400).json({ success: false, msg: err });
+  }
 };
