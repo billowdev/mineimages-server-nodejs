@@ -3,10 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 
-const { signupController, signinController, activateAccount } = require("../controllers/auth.controllers");
+const { signupController, signinController, activateAccount, normalSignupController } = require("../controllers/auth.controllers");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/signup", signupController);
+router.post("/normal/signup", normalSignupController);
 router.post("/signin", signinController);
 
 router.get("/authenticated", validateToken, (req,res) =>{

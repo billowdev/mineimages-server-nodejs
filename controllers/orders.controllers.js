@@ -2,6 +2,7 @@ const { Orders, Transactions, Images, Users } = require("../models");
 const Op = require("sequelize").Op;
 const { conn } = require("../config/rawQueryConfig");
 const { response } = require("express");
+const e = require("express");
 
 exports.getAllOrders = async (req, res) => {
   try {
@@ -90,19 +91,25 @@ exports.getAllOrders = async (req, res) => {
 };
 
 exports.createUserOrder = async (req, res) => {
-  const ImageId = req.body.dataImage.id; // ภาพที่ซื้อ
-  const UserId = req.user.id; // คนซื้อ
-  const price = req.body.dataImage.price; // ราคาตอนซื้อ
-
-  // solution handle turorial
-  /*
+  const ImageId = req.body.id;
+  const rawDataImages = await Images.findOne({
+    where: { id: ImageId },
+    raw: true,
+  });
+  if (rawDataImages == null) {
+    res.status(400).json({ success: false, msg: "somthing went wrong!" });
+  } else {
+    const UserId = req.user.id; // คนซื้อ
+    const price = rawDataImages.price; // ราคาตอนซื้อ
+    // solution handle turorial
+    /*
      How to Create a Node.js Cluster for Speeding Up Your Apps
     - https://www.sitepoint.com/how-to-create-a-node-js-cluster-for-speeding-up-your-apps/
     Let It Crash: Best Practices for Handling Node.js Errors on Shutdown
     - https://blog.heroku.com/best-practices-nodejs-errors
   */
 
-  /* -------------- Order route -------------- 
+    /* -------------- Order route -------------- 
   | order condition: 
   | 1. if that user has already owner of that image (check it by choice 2)
   | 2. which each transaction user who login status (on "pending" or "complete") -> transaction
@@ -117,62 +124,65 @@ exports.createUserOrder = async (req, res) => {
   | 11.       then create Transaction.then( create order with target ImageId and this.Transaction.id )
   | 12. |# -- end process -- #|
   */
-  // ----------------- condition 1 - 4 working ------------------- \\
-  const orderComplete = await Orders.findAll({
-    where: {
-      UserId: UserId,
-      ImageId: ImageId,
-      status: "complete",
-    },
-  }).then((data) => {
-    return data;
-  });
-
-  // ----------------- condition 5 - 12 working ------------------- \\
-  if (orderComplete.length == 0) {
-    const orderIsExist = await Orders.findOne({
-      where: {
-        ImageId: ImageId,
-        UserId: UserId,
-        [Op.or]: [{ status: "oncart" }, { status: "transaction" }],
-      },
-    });
-    const imageIsExist = await Images.findOne({
+    // ----------------- condition 1 - 4 working ------------------- \\
+    const orderComplete = await Orders.findOne({
       where: {
         UserId: UserId,
-        id: ImageId,
+        ImageId: ImageId,
+        status: "complete",
       },
+    }).then((data) => {
+      return data;
     });
 
-    if (!orderIsExist && !imageIsExist) {
-      Orders.create({
-        ImageId: ImageId,
-        price: price,
-        UserId: UserId,
-      })
-        .then((response) => {
-          res.json({
-            success: true,
-            msg: "create order successfully",
-            data: response,
-          });
+    // ----------------- condition 5 - 12 working ------------------- \\
+    if (orderComplete == null) {
+      const orderIsExist = await Orders.findOne({
+        where: {
+          ImageId: ImageId,
+          UserId: UserId,
+          [Op.or]: [{ status: "oncart" }, { status: "transaction" }],
+        },
+      });
+      const imageIsExist = await Images.findOne({
+        where: {
+          UserId: UserId,
+          id: ImageId,
+        },
+      });
+
+      if (!orderIsExist && !imageIsExist) {
+        Orders.create({
+          ImageId: ImageId,
+          price: price,
+          UserId: UserId,
         })
-        .catch((err) => {
-          if (err) {
-            res.status(400).json({ success: false, error: err });
-          }
+          .then((response) => {
+            res
+              .status(200)
+              .json({
+                success: true,
+                msg: "create order successfully",
+                data: response,
+              });
+          })
+          .catch((err) => {
+            if (err) {
+              res.status(400).json({ success: false, error: err });
+            }
+          });
+      } else {
+        res.status(201).json({
+          success: false,
+          msg: "this image has already oncart or image already on transaction or you have alreay own this image",
         });
+      }
     } else {
-      res.status(201).json({
-        success: false,
-        msg: "this image has already oncart or image already on transaction or you have alreay own this image ",
+      res.json({
+        text: "You have already owned this image ",
+        item: orderComplete,
       });
     }
-  } else {
-    res.json({
-      text: "You have already owned this image ",
-      item: orderComplete[0],
-    });
   }
 };
 
@@ -207,7 +217,7 @@ exports.checkoutOrder = async (req, res) => {
           },
         }
       ).then((response) => {
-        res.status(200).json({success:true, msg: "order has checkout"});
+        res.status(200).json({ success: true, msg: "order has checkout" });
       });
     } else {
       const transaction = await Transactions.create({ UserId: UserId });
@@ -227,12 +237,12 @@ exports.checkoutOrder = async (req, res) => {
             },
           }
         ).then((response) => {
-          res.status(200).json({success:true, msg: "order has checkout"});
+          res.status(200).json({ success: true, msg: "order has checkout" });
         });
       }
     }
   } else {
-    res.status(201).json({success:false, msg:"null"});
+    res.status(201).json({ success: false, msg: "null" });
   }
 };
 
@@ -284,7 +294,7 @@ exports.getOncartOrders = async (req, res) => {
   }
 };
 
-exports.getCompleteOrders = async(req,res) =>{
+exports.getCompleteOrders = async (req, res) => {
   try {
     const reqUserId = req.user.id;
     const complete = await Orders.findAll({
@@ -314,10 +324,10 @@ exports.getCompleteOrders = async(req,res) =>{
       res.status(200).json({
         success: true,
         msg: "order on cart success",
-        data: { complete, totalItem},
+        data: { complete, totalItem },
       });
-    } else{
-      res.status(201).json({success:false, msg:"have no order complete"})
+    } else {
+      res.status(201).json({ success: false, msg: "have no order complete" });
     }
   } catch (err) {
     console.log({
@@ -328,7 +338,7 @@ exports.getCompleteOrders = async(req,res) =>{
       .status(400)
       .json({ success: false, msg: "can't get complete orders" });
   }
-}
+};
 
 // ===========================================================
 
