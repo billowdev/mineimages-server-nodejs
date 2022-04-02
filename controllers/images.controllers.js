@@ -200,11 +200,14 @@ exports.getAllImage = async (req, res) => {
     where: { visible: "public", status: "active" },
     raw: true,
   });
-  let publicIds = [];
+  let data = [];
+
   image.forEach((element) => {
-    publicIds.push(element.publicId);
+    const id = element.id
+    const publicId = element.publicId
+    data.push({id, publicId});
   });
-  return res.send(publicIds);
+  return res.send(data);
 };
 
 exports.getImageDetail = async (req, res) => {
@@ -212,7 +215,7 @@ exports.getImageDetail = async (req, res) => {
   console.log(imgid);
   const { id, publicId, name, detail, pathWatermark, price, UserId } =
     await Images.findOne({
-      where: { publicId: imgid },
+      where: { id: imgid },
     });
   const { firstName } = await Users.findOne({ where: { id: UserId } });
 

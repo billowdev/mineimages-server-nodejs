@@ -4,6 +4,9 @@ const morgan = require('morgan')
 const cors = require('cors')
 const app = express();
 const db = require("./models");
+const figlet = require("figlet");
+const inquirer = require("inquirer");
+const gradient = require("gradient-string");
 
 // config.env to 
 require('dotenv').config({
@@ -42,6 +45,9 @@ const authRoute = require("./routes/auth.route");
 app.use("/auth", authRoute);
 
 
+const categoriesRoute = require("./routes/categories.route");
+app.use("/categories", categoriesRoute);
+
 app.use((req,res, next)=>{
 	res.status(404).json({
 		success: false,
@@ -52,6 +58,28 @@ app.use((req,res, next)=>{
 const PORT = process.env.PORT
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+	runningServe(`SERVE ON PORT ${PORT}`);
   });
 });
+
+let status;
+const runningServe = async (log) => {
+  figlet(log, function (err, data) {
+    console.log(data);
+  });
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+//   const { text } = await inquirer.prompt({
+//     type: "input",
+//     text: "text",
+//     message: "Enter your text?",
+//   });
+//   status = text;
+
+  const msg = `MINEIMAGES`
+  figlet(msg, (err, data)=>[
+	  console.log(gradient.pastel.multiline(data))
+  ])
+};
+
+

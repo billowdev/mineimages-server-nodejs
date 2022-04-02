@@ -156,3 +156,54 @@ exports.signinController = async (req, res) => {
     console.log(`Error auth.controllers - ERROR: ${err}`);
   }
 };
+
+exports.normalSignupController = (req, res) => {
+  const { firstName, lastName, email, password, telephone } = req.body;
+  Users.findAll({ where: { email: email } }).then((response) => {
+    if (response.length != 0) {
+      res.status(400).json({ success: false, msg: "email has already exists" });
+    } else {
+      // ---- SactOverFlow //
+      // https://stackoverflow.com/questions/16723507/get-last-inserted-id-sequelize
+      // https://stackoverflow.com/questions/61028014/inserting-data-in-multiple-tables-using-sequelize
+
+      bcrypt.hash(password, 10).then((hash) => {
+        Users.create({
+          password: hash,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          telephone: telephone,
+        })
+          .then((data) => {
+            // hook field on Address
+            Addresses.create({
+              addressLine1: "",
+              city: "",
+              postalCode: "",
+              country: "",
+              UserId: data.id,
+            });
+            // hook field on PaymentUsers
+            PaymentUsers.create({
+              provider: "",
+              cardNumber: "",
+              expiryDate: "",
+              securityCode: "",
+              UserId: data.id,
+            });
+
+            return res.status(200).send("USER REGISTER SUCCESSFULY");
+          })
+          .catch((err) => {
+            if (err) {
+              console.log("Error in signup while account activation", err);
+              return res
+                .status(400)
+                .json({ error: "Error activating account" });
+            }
+          });
+      });
+    }
+  });
+};
