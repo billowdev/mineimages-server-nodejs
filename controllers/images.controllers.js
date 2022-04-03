@@ -20,7 +20,7 @@ exports.getImagesUser = async (req, res) => {
     const search = req.query.search;
     const startIndex = (page - 1) * perPage;
 
-    const total = await Images.count({ where: { UserId: reqUserId } });
+    const total = await Images.count({ where: { UserId: reqUserId , remove:'NO'} });
 
     let totalPages = total / perPage;
     let images;
@@ -30,6 +30,7 @@ exports.getImagesUser = async (req, res) => {
         limit: perPage,
         where: {
           UserId: reqUserId,
+          remove:'NO',
           name: {
             [Op.like]: `%${search}%`,
           },
@@ -40,6 +41,7 @@ exports.getImagesUser = async (req, res) => {
       images = await Images.findAll({
         where: {
           UserId: reqUserId,
+          remove:'NO',
           name: {
             [Op.like]: `%${search}%`,
           },
@@ -49,20 +51,16 @@ exports.getImagesUser = async (req, res) => {
       images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
-        where: { UserId: reqUserId },
+        where: { UserId: reqUserId,remove:'NO' },
         order: [[sortColumn, sortDirection]],
       });
     } else {
       images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
-        where: { UserId: reqUserId },
+        where: { UserId: reqUserId, remove:'NO' },
       });
     }
-
-    //  let images = await Images.findAll({
-    //   where: { UserId: reqUserId },
-    // });
 
     res.status(200).json({
       success: true,
@@ -146,32 +144,34 @@ exports.getImageById = async (req, res) => {
 exports.uploadImageByUser = async (req, res) => {
   try {
     const id = req.user.id;
-    const fileStr = req.body.data;
+    const {name, detail, price, image, CategoryId} = req.body
+    const fileStr =image
+    console.log(req.body)
     const uploadOriginalResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: "mineimages_original",
     });
     const uploadWatermarkResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: "mineimages_watermark",
     });
-    console.log(uploadWatermarkResponse);
+    // console.log(uploadWatermarkResponse);
     const rawImagesData = {
-      name: "",
-      detail: "",
+      name: name,
+      detail: detail,
       publicId: uploadWatermarkResponse.public_id,
       pathOrigin: uploadOriginalResponse.secure_url,
       pathWatermark: uploadWatermarkResponse.secure_url,
-      price: 500,
+      price: price,
+      CategoryId: CategoryId,
       UserId: id,
     };
+
     await Images.create(rawImagesData);
-
-    console.log(uploadOriginalResponse.secure_url);
+    // console.log(uploadOriginalResponse.secure_url);
     // console.log(uploadWatermarkResponse);
-
-    res.json({ msg: "File uploaded sucessfuly" });
+    res.status(200).json({success:true, msg: "File uploaded sucessfuly" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ err: "somthing went wrong" });
+    res.status(500).json({success:false, err: "somthing went wrong" });
   }
 };
 
@@ -203,9 +203,9 @@ exports.getAllImage = async (req, res) => {
   let data = [];
 
   image.forEach((element) => {
-    const id = element.id
-    const publicId = element.publicId
-    data.push({id, publicId});
+    const id = element.id;
+    const publicId = element.publicId;
+    data.push({ id, publicId });
   });
   return res.send(data);
 };
@@ -241,14 +241,23 @@ exports.getSearchImages = async (req, res) => {
 };
 
 exports.patchImageData = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const data = req.body;
     const resp = await Images.update(data, { where: { id: req.body.id } });
-    console.log(resp)  
+    console.log(resp);
     res.status(200).json({ success: true, msg: "Update images successfuly" });
   } catch (err) {
     console.log({ success: false, msg: err });
     res.status(400).json({ success: false, msg: err });
+  }
+};
+
+exports.patchDeleteImage = async (req, res) => {
+  try {
+    await Images.update({ remove: "YES" }, { where: { id: req.body.id, UserId:req.user.id } });
+    res.status(200).json({ success: true, msg: "delete success" });
+  } catch (err) {
+    res.status(400).json({ success: false, msg: "can't delete images"});
   }
 };

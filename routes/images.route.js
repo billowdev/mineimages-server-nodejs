@@ -8,7 +8,8 @@ const {
   uploadImageByUser,
   getAllImage,
   getImageDetail,
-  patchImageData
+  patchImageData,
+  patchDeleteImage
 } = require("../controllers/images.controllers");
 
 
@@ -27,6 +28,8 @@ router.post("/", createImageUser);
 router.post("/upload", validateToken,  uploadImageByUser);
 
 router.patch("/", validateToken, patchImageData);
+
+router.patch("/delete", validateToken, patchDeleteImage);
 
 
 
