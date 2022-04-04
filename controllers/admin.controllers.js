@@ -263,8 +263,13 @@ exports.updateImages = async (req, res) => {
 exports.createCategories = async (req, res) => {
   const categories = req.body;
   try {
-    await Categories.create(categories);
-    res.status(200).json({ success: true, msg: "create categories success" });
+    const exist = await Categories.findOne({where:{name:req.body.name}})
+    if(exist==null){
+      await Categories.create(categories);
+      res.status(200).json({ success: true, msg: "create categories success" });
+    }else{
+      res.status(201).json({success:false, msg:"can't add categories because it is exist!"})
+    }
   } catch (err) {
     res.status(400).json({ success: false, msg: "error" });
   }
