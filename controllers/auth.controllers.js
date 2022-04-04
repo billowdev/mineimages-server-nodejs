@@ -207,3 +207,5 @@ exports.normalSignupController = (req, res) => {
     }
   });
 };
+
+

@@ -64,17 +64,7 @@ db.sequelize.sync().then(() => {
 
 let status;
 const runningServe = async (log) => {
-  figlet(log, function (err, data) {
-    console.log(data);
-  });
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-//   const { text } = await inquirer.prompt({
-//     type: "input",
-//     text: "text",
-//     message: "Enter your text?",
-//   });
-//   status = text;
+	console.log(`\n--- ${log} ---`);
 
   const msg = `MINEIMAGES`
   figlet(msg, (err, data)=>[

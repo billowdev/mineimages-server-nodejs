@@ -4,18 +4,33 @@ const { validateToken } = require("../middlewares/AuthMiddleware");
 const {
   getAllUserData,
   createCategories,
-  checkoutConfirm
+  checkoutConfirm,
+  getAllOrders,
+  getAllImages,
+  updateImages,
+  // createImages,
+  updateCategories,
+  deleteCategories,
+  getCategoriesById
 } = require("../controllers/admin.controllers");
 
 // ----------------- Admin route  ----------------- \\
 router.get("/lacakp", validateToken, getAllUserData);
 
 router.get("/users");
-router.get("/images");
-router.get("/orders");
+// ----------------- IMAGES ROUTE  ----------------- \\
+router.get("/images", getAllImages);
+router.patch("/images/update", updateImages);
+// router.post("/images/insert", createImages);
+
+router.get("/orders", getAllOrders);
+
 router.get("/transactions");
 
-router.post("/categories", createCategories);
+router.post("/categories/create",validateToken, createCategories);
+router.patch("/categories/update",validateToken, updateCategories);
+router.patch("/categories/delete",validateToken, deleteCategories);
+router.get("/categories/get/:id",validateToken, getCategoriesById);
 
 
 
