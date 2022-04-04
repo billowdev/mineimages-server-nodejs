@@ -20,7 +20,9 @@ exports.getImagesUser = async (req, res) => {
     const search = req.query.search;
     const startIndex = (page - 1) * perPage;
 
-    const total = await Images.count({ where: { UserId: reqUserId , remove:'NO'} });
+    const total = await Images.count({
+      where: { UserId: reqUserId, remove: "NO" },
+    });
 
     let totalPages = total / perPage;
     let images;
@@ -30,7 +32,7 @@ exports.getImagesUser = async (req, res) => {
         limit: perPage,
         where: {
           UserId: reqUserId,
-          remove:'NO',
+          remove: "NO",
           name: {
             [Op.like]: `%${search}%`,
           },
@@ -41,7 +43,7 @@ exports.getImagesUser = async (req, res) => {
       images = await Images.findAll({
         where: {
           UserId: reqUserId,
-          remove:'NO',
+          remove: "NO",
           name: {
             [Op.like]: `%${search}%`,
           },
@@ -51,14 +53,14 @@ exports.getImagesUser = async (req, res) => {
       images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
-        where: { UserId: reqUserId,remove:'NO' },
+        where: { UserId: reqUserId, remove: "NO" },
         order: [[sortColumn, sortDirection]],
       });
     } else {
       images = await Images.findAll({
         offset: startIndex,
         limit: perPage,
-        where: { UserId: reqUserId, remove:'NO' },
+        where: { UserId: reqUserId, remove: "NO" },
       });
     }
 
@@ -94,13 +96,12 @@ exports.createImageUser = async (req, res) => {
   } else {
     imageReq.UserId = req.user.id;
     Images.create(imageReq).then(() => {
-      res.json("Add image successfuly");
+      res.status(200).json("Add image successfuly");
     });
   }
 };
 
 // ===================== update (put, patch) section =====================
-
 exports.updateImageUser = async (req, res) => {
   const imageReq = req.body;
   const ImageId = req.params.imgId;
@@ -144,9 +145,9 @@ exports.getImageById = async (req, res) => {
 exports.uploadImageByUser = async (req, res) => {
   try {
     const id = req.user.id;
-    const {name, detail, price, image, CategoryId} = req.body
-    const fileStr =image
-    console.log(req.body)
+    const { name, detail, price, image, CategoryId } = req.body;
+    const fileStr = image;
+    console.log(req.body);
     const uploadOriginalResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: "mineimages_original",
     });
@@ -168,10 +169,10 @@ exports.uploadImageByUser = async (req, res) => {
     await Images.create(rawImagesData);
     // console.log(uploadOriginalResponse.secure_url);
     // console.log(uploadWatermarkResponse);
-    res.status(200).json({success:true, msg: "File uploaded sucessfuly" });
+    res.status(200).json({ success: true, msg: "File uploaded sucessfuly" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({success:false, err: "somthing went wrong" });
+    res.status(500).json({ success: false, err: "somthing went wrong" });
   }
 };
 
@@ -255,9 +256,13 @@ exports.patchImageData = async (req, res) => {
 
 exports.patchDeleteImage = async (req, res) => {
   try {
-    await Images.update({ remove: "YES" }, { where: { id: req.body.id, UserId:req.user.id } });
+    await Images.update(
+      { remove: "YES" },
+      { where: { id: req.body.id, UserId: req.user.id } }
+    );
     res.status(200).json({ success: true, msg: "delete success" });
   } catch (err) {
-    res.status(400).json({ success: false, msg: "can't delete images"});
+    console.log({ success: false, msg: "on images controller", error: err });
+    res.status(400).json({ success: false, msg: "can't delete images" });
   }
 };

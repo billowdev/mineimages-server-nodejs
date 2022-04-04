@@ -216,8 +216,8 @@ exports.checkoutOrder = async (req, res) => {
             status: "oncart",
           },
         }
-      ).then((response) => {
-        res.status(200).json({ success: true, msg: "order has checkout" });
+      ).then(() => {
+        res.status(200).json({ success: true, msg: "checkout orders successfuly!" });
       });
     } else {
       const transaction = await Transactions.create({ UserId: UserId });
@@ -236,8 +236,8 @@ exports.checkoutOrder = async (req, res) => {
               ImageId: ImageIdList,
             },
           }
-        ).then((response) => {
-          res.status(200).json({ success: true, msg: "order has checkout" });
+        ).then(() => {
+          res.status(200).json({ success: true, msg: "checkout orders successfuly!" });
         });
       }
     }
