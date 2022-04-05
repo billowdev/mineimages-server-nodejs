@@ -465,7 +465,7 @@ exports.getAllImages = async (req, res) => {
       });
     } catch (err) {
       console.log("Error at get Images user controllers", err);
-      res.status(401).send("Error can't get Images");
+      res.status(401).json("Error can't get Images");
     }
   }
 };
