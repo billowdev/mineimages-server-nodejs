@@ -127,7 +127,7 @@ exports.signinController = async (req, res) => {
         {
           id: user.id,
           firstName: user.firstName,
-          persmission: user.permission,
+          permission: user.permission,
         },
         process.env.JWT_SECRET,
         {
