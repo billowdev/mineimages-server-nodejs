@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const {
-  getAllUserData,
   createCategories,
   checkoutConfirm,
   getAllOrders,
@@ -11,13 +10,20 @@ const {
   // createImages,
   updateCategories,
   deleteCategories,
-  getCategoriesById
+  getCategoriesById,
+  getAllUserData,
+  updateUserData,
+  createUserData,
+  deleteUserData
 } = require("../controllers/admin.controllers");
 
 // ----------------- Admin route  ----------------- \\
 router.get("/lacakp", validateToken, getAllUserData);
 
-router.get("/users");
+router.get("/users/get", validateToken, getAllUserData);
+router.post("/users/create", validateToken, createUserData);
+router.patch("/users/update", validateToken, updateUserData);
+router.patch("/users/delete", validateToken, deleteUserData);
 // ----------------- IMAGES ROUTE  ----------------- \\
 router.get("/images", getAllImages);
 router.patch("/images/update", updateImages);
