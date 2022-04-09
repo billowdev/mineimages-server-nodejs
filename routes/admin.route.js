@@ -25,11 +25,11 @@ router.post("/users/create", validateToken, createUserData);
 router.patch("/users/update", validateToken, updateUserData);
 router.patch("/users/delete", validateToken, deleteUserData);
 // ----------------- IMAGES ROUTE  ----------------- \\
-router.get("/images", getAllImages);
+router.get("/images", validateToken, getAllImages);
 router.patch("/images/update", updateImages);
 // router.post("/images/insert", createImages);
 
-router.get("/orders", getAllOrders);
+router.get("/orders/get", getAllOrders);
 
 router.get("/transactions");
 

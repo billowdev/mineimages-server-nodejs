@@ -39,34 +39,34 @@ exports.getAllUserData = async (req, res) => {
         userData = await Users.findAll({
           offset: startIndex,
           limit: perPage,
-          attributes: { exclude: ['password'] },
+          attributes: { exclude: ["password"] },
           include: [
             {
               model: Addresses,
               require: true,
-            }
+            },
           ],
           where: {
             firstName: {
               [Op.like]: `%${search}%`,
-            }
+            },
           },
           order: [[sortColumn, sortDirection]],
           raw: true,
         });
       } else if (search) {
         userData = await Users.findAll({
-          attributes: { exclude: ['password'] },
+          attributes: { exclude: ["password"] },
           include: [
             {
               model: Addresses,
               require: true,
-            }
+            },
           ],
           where: {
             firstName: {
               [Op.like]: `%${search}%`,
-            }
+            },
           },
           raw: true,
         });
@@ -74,10 +74,8 @@ exports.getAllUserData = async (req, res) => {
         userData = await Users.findAll({
           offset: startIndex,
           limit: perPage,
-          attributes: { exclude: ['password'] },
-          include: [
-            { model: Addresses, require: true },
-          ],
+          attributes: { exclude: ["password"] },
+          include: [{ model: Addresses, require: true }],
           order: [[sortColumn, sortDirection]],
           raw: true,
         });
@@ -85,10 +83,8 @@ exports.getAllUserData = async (req, res) => {
         userData = await Users.findAll({
           offset: startIndex,
           limit: perPage,
-          attributes: { exclude: ['password'] },
-          include: [
-            { model: Addresses, require: true },
-          ],
+          attributes: { exclude: ["password"] },
+          include: [{ model: Addresses, require: true }],
           raw: true,
         });
       }
@@ -100,7 +96,7 @@ exports.getAllUserData = async (req, res) => {
           per_page: perPage,
           total_pages: totalPages,
           total: total,
-          data:userData,
+          data: userData,
         },
       });
     } catch (err) {
@@ -119,11 +115,13 @@ exports.createUserData = async (req, res) => {
     res.status(404).json({ success: false, message: "Page Not Founded" });
   } else {
     try {
-      const {user, address} = req.body;
+      const { user, address } = req.body;
       const { firstName, lastName, email, password, telephone, about } = user;
       Users.findAll({ where: { email: email } }).then((response) => {
         if (response.length != 0) {
-          res.status(400).json({ success: false, msg: "email has already exists" });
+          res
+            .status(400)
+            .json({ success: false, msg: "email has already exists" });
         } else {
           bcrypt.hash(password, 10).then((hash) => {
             Users.create({
@@ -132,13 +130,13 @@ exports.createUserData = async (req, res) => {
               firstName: firstName,
               lastName: lastName,
               telephone: telephone,
-              about:about
+              about: about,
             })
               .then((data) => {
-                if(address!=null  || address!={} || address!=undefined){
-                  const newAddress = {...address, ...data.id}
+                if (address != null || address != {} || address != undefined) {
+                  const newAddress = { ...address, ...data.id };
                   Addresses.create(newAddress);
-                }else{
+                } else {
                   Addresses.create({
                     addressLine1: "",
                     city: "",
@@ -147,7 +145,7 @@ exports.createUserData = async (req, res) => {
                     UserId: data.id,
                   });
                 }
-                
+
                 // hook field on PaymentUsers
                 PaymentUsers.create({
                   provider: "",
@@ -160,9 +158,7 @@ exports.createUserData = async (req, res) => {
               .catch((err) => {
                 if (err) {
                   console.log("Error in signup while account activation", err);
-                  return res
-                    .status(400)
-                    .json({ error: "Error" });
+                  return res.status(400).json({ error: "Error" });
                 }
               });
           });
@@ -184,15 +180,14 @@ exports.updateUserData = async (req, res) => {
   if (!(permission === "admin")) {
     res.status(404).json({ success: false, message: "Page Not Founded" });
   } else {
-
     try {
       const user = req.body.user;
       const address = req.body.address;
-      console.log(user, address)
+      console.log(user, address);
 
       const resp = await Users.update(user, { where: { id: user.id } });
-      if (address!={} || address != null || address!=undefined){
-        await Addresses.update(address, {where:{UserId:user.id}})
+      if (address != {} || address != null || address != undefined) {
+        await Addresses.update(address, { where: { UserId: user.id } });
       }
       res.status(200).json({ success: true, msg: "update user success" });
     } catch (err) {
@@ -228,26 +223,6 @@ exports.deleteUserData = async (req, res) => {
 // ================================================================================//
 //                        ORDERS & TRANSACTION CONTROLLERS                         //
 // ================================================================================//
-
-exports.checkoutConfirm = async (req, res) => {
-  const transaction = req.body;
-  const permission = req.user.permission;
-  if (permission != "admin") {
-    res.status(404).json("404 not found");
-  } else {
-    await Transactions.update(
-      { status: "complete" },
-      { where: { id: transaction.TransactionId } }
-    );
-
-    await Orders.update(
-      { status: "complete" },
-      { where: { TransactionId: transaction.TransactionId } }
-    ).then((response) => {
-      res.json("checkout confirm complete");
-    });
-  }
-};
 
 exports.getAllOrders = async (req, res) => {
   const permission = req.user.permission;
@@ -335,6 +310,22 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
+// update orders controllers
+exports.updateOrder = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Orders.update(req.body, { where: { id: id } });
+    res.status(200).json({ success: true, msg: "update successfuly" });
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: "error on admin controllers at update orders",
+      error: err,
+    });
+    res.status(400).json({ success: false, msg: "something went wrong!" });
+  }
+};
+
 exports.getAllTransactions = async (req, res) => {
   const permission = req.user.permission;
   if (!(permission === "admin")) {
@@ -394,6 +385,44 @@ exports.getAllTransactions = async (req, res) => {
       console.log("Error at get order user controllers", err);
       res.status(401).send("Error can't get order");
     }
+  }
+};
+
+// checkout order to transaction state
+exports.checkoutConfirm = async (req, res) => {
+  try {
+    const transaction = req.body;
+    const permission = req.user.permission;
+    if (permission != "admin") {
+      res.status(404).json("404 not found");
+    } else {
+      await Transactions.update(
+        { status: "complete" },
+        { where: { id: transaction.TransactionId } }
+      );
+      await Orders.update(
+        { status: "complete" },
+        { where: { TransactionId: transaction.TransactionId } }
+      );
+      res.status(200).json({ success: true, msg: "checkout confirm complete" });
+    }
+  } catch (err) {
+    console.log({ success: false, msg: "something went wrong!" });
+    res
+      .status(400)
+      .json({ success: false, msg: "something went wrong!", error: err });
+  }
+};
+
+exports.updateTransactions = async (req, res) => {
+  try {
+    await Transactions.update(req.body, { where: { id: req.params } });
+    res
+      .status(200)
+      .json({ success: true, msg: "update transaction success fuly" });
+  } catch (err) {
+    console.log();
+    res.status(400).json({ success: false, msg: "something went wrong" });
   }
 };
 
@@ -465,7 +494,7 @@ exports.getAllImages = async (req, res) => {
       });
     } catch (err) {
       console.log("Error at get Images user controllers", err);
-      res.status(401).send("Error can't get Images");
+      res.status(401).json("Error can't get Images");
     }
   }
 };
@@ -545,7 +574,7 @@ exports.updateCategories = async (req, res) => {
     const data = req.body;
     await Categories.update(data, { where: { id: req.body.id } });
     res.status(200).json({ success: true, msg: "delete success" });
-    res.status(201)
+    res.status(201);
   } catch (err) {
     res.status(400).json({ success: false, msg: "can't delete images" });
   }
