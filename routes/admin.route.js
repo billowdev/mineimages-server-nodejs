@@ -29,7 +29,7 @@ router.get("/images", validateToken, getAllImages);
 router.patch("/images/update", updateImages);
 // router.post("/images/insert", createImages);
 
-router.get("/orders", getAllOrders);
+router.get("/orders/get", getAllOrders);
 
 router.get("/transactions");
 
