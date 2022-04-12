@@ -305,7 +305,7 @@ exports.getAllOrders = async (req, res) => {
       });
     } catch (err) {
       console.log("Error at get order user controllers", err);
-      res.status(401).send("Error can't get order");
+      res.status(401).json({success:false, msg:"something went wrong"});
     }
   }
 };
@@ -382,8 +382,8 @@ exports.getAllTransactions = async (req, res) => {
         data,
       });
     } catch (err) {
-      console.log("Error at get order user controllers", err);
-      res.status(401).send("Error can't get order");
+      console.log({ success: false, msg: "something went wrong", error:err });
+      res.status(401).json({success: false, msg: "something went wrong"});
     }
   }
 };
@@ -421,7 +421,7 @@ exports.updateTransactions = async (req, res) => {
       .status(200)
       .json({ success: true, msg: "update transaction success fuly" });
   } catch (err) {
-    console.log();
+    console.log({ success: false, msg: "something went wrong", error:err });
     res.status(400).json({ success: false, msg: "something went wrong" });
   }
 };

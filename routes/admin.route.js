@@ -29,9 +29,9 @@ router.get("/images", validateToken, getAllImages);
 router.patch("/images/update", updateImages);
 // router.post("/images/insert", createImages);
 
-router.get("/orders/get", getAllOrders);
+router.get("/orders/get",validateToken, getAllOrders);
 
-router.get("/transactions");
+router.get("/transactions",validateToken,);
 
 router.post("/categories/create",validateToken, createCategories);
 router.patch("/categories/update",validateToken, updateCategories);
