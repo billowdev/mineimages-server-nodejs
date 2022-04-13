@@ -16,7 +16,7 @@ const {
   updateUserData,
   createUserData,
   deleteUserData,
-
+  getOrdersOnTransaction
 } = require("../controllers/admin.controllers");
 
 // ----------------- Admin route  ----------------- \\
@@ -34,6 +34,7 @@ router.patch("/images/update", updateImages);
 
 router.get("/orders/get",validateToken, getAllOrders);
 
+router.get("/transactions/get/on-transaction",validateToken, getOrdersOnTransaction);
 router.get("/transactions",validateToken,);
 
 router.post("/categories/create",validateToken, createCategories);
@@ -41,9 +42,7 @@ router.patch("/categories/update",validateToken, updateCategories);
 router.patch("/categories/delete",validateToken, deleteCategories);
 router.get("/categories/get/:id",validateToken, getCategoriesById);
 
-
-
-router.post("/checkout/confirm", validateToken, checkoutConfirm);
+router.get("/checkout/confirm/:id", validateToken, checkoutConfirm);
 
 
 module.exports = router;
