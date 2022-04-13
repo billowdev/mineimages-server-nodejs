@@ -6,6 +6,7 @@ const {
   checkoutConfirm,
   getAllOrders,
   getAllImages,
+  getImagesById,
   updateImages,
   // createImages,
   updateCategories,
@@ -14,7 +15,8 @@ const {
   getAllUserData,
   updateUserData,
   createUserData,
-  deleteUserData
+  deleteUserData,
+
 } = require("../controllers/admin.controllers");
 
 // ----------------- Admin route  ----------------- \\
@@ -26,6 +28,7 @@ router.patch("/users/update", validateToken, updateUserData);
 router.patch("/users/delete", validateToken, deleteUserData);
 // ----------------- IMAGES ROUTE  ----------------- \\
 router.get("/images", validateToken, getAllImages);
+router.get("/images/byId/:id", validateToken, getImagesById);
 router.patch("/images/update", updateImages);
 // router.post("/images/insert", createImages);
 

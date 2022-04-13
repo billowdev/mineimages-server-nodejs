@@ -3,6 +3,12 @@ const bcrypt = require("bcrypt");
 const { createTokens } = require("../middlewares/AuthMiddleware");
 const { sign, verify } = require("jsonwebtoken");
 
+/**
+ * USERS CONTROLLERS
+ * ORDERS & TRANSACTION CONTROLLERS
+ * IMAGES CONTROLLERS
+ */
+
 const {
   Users,
   Addresses,
@@ -305,11 +311,10 @@ exports.getAllOrders = async (req, res) => {
       });
     } catch (err) {
       console.log("Error at get order user controllers", err);
-      res.status(401).json({success:false, msg:"something went wrong"});
+      res.status(401).json({ success: false, msg: "something went wrong" });
     }
   }
 };
-
 
 exports.getAllInTransactionOrders = async (req, res) => {
   const permission = req.user.permission;
@@ -392,11 +397,10 @@ exports.getAllInTransactionOrders = async (req, res) => {
       });
     } catch (err) {
       console.log("Error at get order user controllers", err);
-      res.status(401).json({success:false, msg:"something went wrong"});
+      res.status(401).json({ success: false, msg: "something went wrong" });
     }
   }
 };
-
 
 // update orders controllers
 exports.updateOrder = async (req, res) => {
@@ -470,8 +474,8 @@ exports.getAllTransactions = async (req, res) => {
         data,
       });
     } catch (err) {
-      console.log({ success: false, msg: "something went wrong", error:err });
-      res.status(401).json({success: false, msg: "something went wrong"});
+      console.log({ success: false, msg: "something went wrong", error: err });
+      res.status(401).json({ success: false, msg: "something went wrong" });
     }
   }
 };
@@ -509,7 +513,7 @@ exports.updateTransactions = async (req, res) => {
       .status(200)
       .json({ success: true, msg: "update transaction success fuly" });
   } catch (err) {
-    console.log({ success: false, msg: "something went wrong", error:err });
+    console.log({ success: false, msg: "something went wrong", error: err });
     res.status(400).json({ success: false, msg: "something went wrong" });
   }
 };
@@ -587,6 +591,22 @@ exports.getAllImages = async (req, res) => {
   }
 };
 
+exports.getImagesById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await Images.findOne({ where: { id: id } });
+    if (data != null) {
+      res
+        .status(200)
+        .json({ success: true, msg: "load image by id success", data: data });
+    } else {
+      res.status(400).json({ success: false, msg: "can't get image by id" });
+    }
+  } catch (err) {
+    console.log({ success: false, msg: "error on image controllers can't get image by id", error: err });
+    res.status(400).json({ success: false, msg: "some thing went wrong" });
+  }
+};
 // exports.createImages = async (req, res) => {
 //   const imageReq = req.body;
 //     const UserId = req.user.id;
