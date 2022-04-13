@@ -20,6 +20,7 @@ const {
 } = require("../models");
 
 const Op = require("sequelize").Op;
+const sequelize = require("sequelize");
 // ==================================================================//
 //                        USERS CONTROLLERS                         //
 // ==================================================================//
@@ -316,7 +317,7 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-exports.getAllInTransactionOrders = async (req, res) => {
+exports.getOrdersOnTransaction = async (req, res) => {
   const permission = req.user.permission;
   if (!(permission === "admin")) {
     res.status(404).json({ success: false, message: "Page Not Founded" });
@@ -329,63 +330,72 @@ exports.getAllInTransactionOrders = async (req, res) => {
       const search = req.query.search;
       const startIndex = (page - 1) * perPage;
 
-      const total = await Orders.count();
+      const total = await Transactions.count({ where: { status: "pending" } });
 
       let totalPages = total / perPage;
       let data;
       if (search && sortColumn) {
-        data = await Orders.findAll({
+        data = await Transactions.findAll({
           offset: startIndex,
           limit: perPage,
           include: [
             {
-              model: Images,
+              model: Orders,
               require: true,
-              order: [[sortColumn, sortDirection]],
+              attributes: ["price"],
+            },
+            {
               where: {
-                name: {
+                price: {
                   [Op.like]: `%${search}%`,
                 },
+                status: "pending",
               },
             },
           ],
         });
       } else if (search) {
-        data = await Orders.findAll({
+        data = await Transactions.findAll({
           include: [
             {
-              model: Images,
+              model: Orders,
               require: true,
-              where: {
-                name: {
-                  [Op.like]: `%${search}%`,
-                },
-              },
+              attributes: ['price'],
             },
           ],
+          where: {
+            name: {
+              [Op.like]: `%${search}%`,
+            },
+            status: "pending",
+          },
         });
       } else if (sortColumn) {
-        data = await Orders.findAll({
+        data = await Transactions.findAll({
           offset: startIndex,
           limit: perPage,
+          order: [[sortColumn, sortDirection]],
           include: [
             {
-              model: Images,
+              model: Orders,
               require: true,
-              order: [[sortColumn, sortDirection]],
+              attributes: ['price'],
             },
           ],
+          where: { status: "pending" },
         });
       } else {
-        data = await Orders.findAll({
+        data = await Transactions.findAll({
           offset: startIndex,
           limit: perPage,
           include: [
             {
-              model: Images,
+              model: Orders,
               require: true,
+              attributes: ['price'],
             },
           ],
+          where: {status: "pending"}, 
         });
       }
       res.json({
@@ -395,6 +405,7 @@ exports.getAllInTransactionOrders = async (req, res) => {
         total: total,
         data,
       });
+      // console.log(data);
     } catch (err) {
       console.log("Error at get order user controllers", err);
       res.status(401).json({ success: false, msg: "something went wrong" });
@@ -483,26 +494,27 @@ exports.getAllTransactions = async (req, res) => {
 // checkout order to transaction state
 exports.checkoutConfirm = async (req, res) => {
   try {
-    const transaction = req.body;
+    const id = req.params.id;
     const permission = req.user.permission;
     if (permission != "admin") {
       res.status(404).json("404 not found");
     } else {
+      console.log('update transaction ', id)
       await Transactions.update(
         { status: "complete" },
-        { where: { id: transaction.TransactionId } }
+        { where: { id: id } }
       );
       await Orders.update(
         { status: "complete" },
-        { where: { TransactionId: transaction.TransactionId } }
+        { where: { TransactionId: id } }
       );
       res.status(200).json({ success: true, msg: "checkout confirm complete" });
     }
   } catch (err) {
-    console.log({ success: false, msg: "something went wrong!" });
+    console.log({ success: false, msg: "something went wrong!",error: err});
     res
       .status(400)
-      .json({ success: false, msg: "something went wrong!", error: err });
+      .json({ success: false, msg: "something went wrong!"});
   }
 };
 
@@ -603,7 +615,11 @@ exports.getImagesById = async (req, res) => {
       res.status(400).json({ success: false, msg: "can't get image by id" });
     }
   } catch (err) {
-    console.log({ success: false, msg: "error on image controllers can't get image by id", error: err });
+    console.log({
+      success: false,
+      msg: "error on image controllers can't get image by id",
+      error: err,
+    });
     res.status(400).json({ success: false, msg: "some thing went wrong" });
   }
 };
