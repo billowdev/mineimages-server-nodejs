@@ -310,6 +310,94 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
+
+exports.getAllInTransactionOrders = async (req, res) => {
+  const permission = req.user.permission;
+  if (!(permission === "admin")) {
+    res.status(404).json({ success: false, message: "Page Not Founded" });
+  } else {
+    try {
+      const page = parseInt(req.query.page);
+      const perPage = parseInt(req.query.per_page);
+      const sortColumn = req.query.sort_column;
+      const sortDirection = req.query.sort_direction;
+      const search = req.query.search;
+      const startIndex = (page - 1) * perPage;
+
+      const total = await Orders.count();
+
+      let totalPages = total / perPage;
+      let data;
+      if (search && sortColumn) {
+        data = await Orders.findAll({
+          offset: startIndex,
+          limit: perPage,
+          include: [
+            {
+              model: Images,
+              require: true,
+              order: [[sortColumn, sortDirection]],
+              where: {
+                name: {
+                  [Op.like]: `%${search}%`,
+                },
+              },
+            },
+          ],
+        });
+      } else if (search) {
+        data = await Orders.findAll({
+          include: [
+            {
+              model: Images,
+              require: true,
+              where: {
+                name: {
+                  [Op.like]: `%${search}%`,
+                },
+              },
+            },
+          ],
+        });
+      } else if (sortColumn) {
+        data = await Orders.findAll({
+          offset: startIndex,
+          limit: perPage,
+          include: [
+            {
+              model: Images,
+              require: true,
+              order: [[sortColumn, sortDirection]],
+            },
+          ],
+        });
+      } else {
+        data = await Orders.findAll({
+          offset: startIndex,
+          limit: perPage,
+          include: [
+            {
+              model: Images,
+              require: true,
+            },
+          ],
+        });
+      }
+      res.json({
+        page: page,
+        per_page: perPage,
+        total_pages: totalPages,
+        total: total,
+        data,
+      });
+    } catch (err) {
+      console.log("Error at get order user controllers", err);
+      res.status(401).json({success:false, msg:"something went wrong"});
+    }
+  }
+};
+
+
 // update orders controllers
 exports.updateOrder = async (req, res) => {
   try {

@@ -2,7 +2,7 @@ const { cloudinary } = require("../utils/cloudinary");
 const { Images, Users } = require("../models");
 const Op = require("sequelize").Op;
 const axios = require("axios");
-
+const Jimp = require("jimp");
 const BASE_URL = `https://api.cloudinary.com/v1_1/${process.env.CLOUNDINARY_NAME}`;
 const auth = {
   username: process.env.CLOUNDINARY_API_KEY,
@@ -147,14 +147,48 @@ exports.uploadImageByUser = async (req, res) => {
     const id = req.user.id;
     const { name, detail, price, image, CategoryId } = req.body;
     const fileStr = image;
-    console.log(req.body);
     const uploadOriginalResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: "mineimages_original",
     });
-    const uploadWatermarkResponse = await cloudinary.uploader.upload(fileStr, {
-      upload_preset: "mineimages_watermark",
-    });
-    // console.log(uploadWatermarkResponse);
+
+    // ========================================================================== //
+    const LOGO = "./images/logo.png";
+    const watermark = async (img) => {
+      const [image, logo] = await Promise.all([
+        Jimp.read(Buffer.from(img.split(",")[1], "base64")),
+        Jimp.read(LOGO),
+      ]);
+      logo.resize(100, Jimp.AUTO);
+
+      const X = 60;
+      const Y = 60;
+
+      const data = await image.composite(logo, X, Y, [
+        {
+          mode: Jimp.BLEND_SCREEN,
+          opacitySource: 0.1,
+          opacityDest: 1,
+        },
+      ]);
+
+      return data;
+    };
+
+    const watermarkImg = await watermark(fileStr);
+    const base64Image = await watermarkImg.getBase64Async(
+      Jimp.AUTO,
+      (err, res) => {
+        return res;
+      }
+    );
+    // ========================================================================== //
+    const uploadWatermarkResponse = await cloudinary.uploader.upload(
+      base64Image,
+      {
+        upload_preset: "mineimages_watermark",
+      }
+    );
+    console.log(uploadWatermarkResponse);
     const rawImagesData = {
       name: name,
       detail: detail,
@@ -165,13 +199,13 @@ exports.uploadImageByUser = async (req, res) => {
       CategoryId: CategoryId,
       UserId: id,
     };
-
-    await Images.create(rawImagesData);
+    const resp = await Images.create(rawImagesData);
+    console.log({ success: true, msg: "upload image success", data: resp });
     // console.log(uploadOriginalResponse.secure_url);
     // console.log(uploadWatermarkResponse);
     res.status(200).json({ success: true, msg: "File uploaded sucessfuly" });
   } catch (err) {
-    console.log(err);
+    console.log({ success: false, msg: "on upload image", error: err });
     res.status(500).json({ success: false, err: "somthing went wrong" });
   }
 };
@@ -198,7 +232,7 @@ exports.uploadImageAvartar = async (req, res) => {
 
 exports.getAllImage = async (req, res) => {
   const image = await Images.findAll({
-    where: { visible: "public", status: "active" },
+    where: { visible: "public", status: "active", remove:'NO'},
     raw: true,
   });
   let data = [];
