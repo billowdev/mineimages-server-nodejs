@@ -53,20 +53,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "cascade",
     });
 
-    Users.hasMany(models.Likes, {
-      onDelete: "cascade",
-    });
-
-
     Users.hasMany(models.Orders, {
       onDelete: "cascade",
     });
-    
-    // user has one payment
-    Users.hasOne(models.PaymentUsers, {
-      onDelete: "cascade",
-    });
-
     // user has one Addresses
     Users.hasOne(models.Addresses, {
       onDelete: "cascade",

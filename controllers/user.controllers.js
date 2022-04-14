@@ -1,4 +1,4 @@
-const { Users, Addresses, PaymentUsers, Images } = require("../models");
+const { Users, Addresses } = require("../models");
 
 // ===================== get section =====================
 exports.getTestApi = async (req, res) => {
@@ -24,9 +24,7 @@ exports.getDataUserController = async (req, res) => {
     } = await Users.findOne({ where: { id: req.user.id } });
     const { addressLine1, addressLine2, city, postalCode, country } =
       await Addresses.findOne({ where: { UserId: req.user.id } });
-    const { provider } = await PaymentUsers.findOne({
-      where: { UserId: req.user.id },
-    });
+   
     const data = {
       id: id,
       email: email,
@@ -54,13 +52,6 @@ exports.getDataUserController = async (req, res) => {
 };
 
 // ===================== create (post) section =====================
-
-exports.createPaymentUser = async (req, res) => {
-  const paymentReq = req.body;
-  const UserId = req.user.id;
-  await PaymentUsers.update(paymentReq, { where: { UserId: UserId } });
-  res.json(paymentReq);
-};
 
 exports.createAddressUser = async (req, res) => {
   const addressReq = req.body;
