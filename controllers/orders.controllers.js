@@ -382,12 +382,10 @@ exports.getBenefitCompleteOrders = async (req, res) => {
 
 exports.deleteOrders  = async (req, res) => {
   try {
-    const resp = await Orders.destroy({where:{id:req.params.id}})
-    if(resp){
+    await Orders.destroy({where:{id:req.params.id}}).then(resp=>{
       res.status(200).json({success:true, msg:"delete success"})
-    }else{
-      res.status(400).json({success:false, msg:"delete failed"})
-    }
+    })
+    
   } catch (err) {
     console.log({
       success: false,
