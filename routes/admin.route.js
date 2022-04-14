@@ -16,7 +16,8 @@ const {
   updateUserData,
   createUserData,
   deleteUserData,
-  getOrdersOnTransaction
+  getOrdersOnTransaction,
+  getCompletedTransactions
 } = require("../controllers/admin.controllers");
 
 // ----------------- Admin route  ----------------- \\
@@ -35,7 +36,8 @@ router.patch("/images/update", updateImages);
 router.get("/orders/get",validateToken, getAllOrders);
 
 router.get("/transactions/get/on-transaction",validateToken, getOrdersOnTransaction);
-router.get("/transactions",validateToken,);
+router.get("/transactions/get/completed",validateToken, getCompletedTransactions);
+// router.get("/transactions",validateToken,);
 
 router.post("/categories/create",validateToken, createCategories);
 router.patch("/categories/update",validateToken, updateCategories);

@@ -9,13 +9,15 @@ const {
   createUserOrder,
   checkoutOrder,
   getOncartOrders,
-  getCompleteOrders
+  getCompleteOrders,
+  getBenefitCompleteOrders
 } = require("../controllers/orders.controllers");
 
 router.get("/", validateToken, getAllOrders);
 
 router.get("/cart", validateToken, getOncartOrders);
 router.get("/complete", validateToken, getCompleteOrders);
+router.get("/complete/benefit", validateToken, getBenefitCompleteOrders);
 
 router.post("/", validateToken, createUserOrder);
 

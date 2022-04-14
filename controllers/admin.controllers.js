@@ -316,6 +316,42 @@ exports.getAllOrders = async (req, res) => {
     }
   }
 };
+exports.getCompletedTransactions = async (req, res) => {
+  try {
+    const permission = req.user.permission;
+    if (!(permission === "admin")) {
+      res.status(404).json({ success: false, message: "Page Not Founded" });
+    } else {
+      const resp = await Transactions.findAll({
+        order: [['updatedAt', 'asc']],
+        include: [
+          {
+            model: Orders,
+            require: true,
+            attributes: ["price"],
+          },
+        ],
+        where: { status: "complete" },
+      });
+      if (resp.length != 0) {
+        res
+          .status(200)
+          .json({ success: true, msg: "get transactions success", data: resp });
+      } else {
+        res
+          .status(400)
+          .json({ success: false, msg: "get transactions failed" });
+      }
+    }
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: "error on admin controllers",
+      error: err,
+    });
+    res.status(400).json({ success: false, msg: "something went wrong" });
+  }
+};
 
 exports.getOrdersOnTransaction = async (req, res) => {
   const permission = req.user.permission;
@@ -360,7 +396,7 @@ exports.getOrdersOnTransaction = async (req, res) => {
             {
               model: Orders,
               require: true,
-              attributes: ['price'],
+              attributes: ["price"],
             },
           ],
           where: {
@@ -379,7 +415,7 @@ exports.getOrdersOnTransaction = async (req, res) => {
             {
               model: Orders,
               require: true,
-              attributes: ['price'],
+              attributes: ["price"],
             },
           ],
           where: { status: "pending" },
@@ -392,10 +428,10 @@ exports.getOrdersOnTransaction = async (req, res) => {
             {
               model: Orders,
               require: true,
-              attributes: ['price'],
+              attributes: ["price"],
             },
           ],
-          where: {status: "pending"}, 
+          where: { status: "pending" },
         });
       }
       res.json({
@@ -499,11 +535,8 @@ exports.checkoutConfirm = async (req, res) => {
     if (permission != "admin") {
       res.status(404).json("404 not found");
     } else {
-      console.log('update transaction ', id)
-      await Transactions.update(
-        { status: "complete" },
-        { where: { id: id } }
-      );
+      console.log("update transaction ", id);
+      await Transactions.update({ status: "complete" }, { where: { id: id } });
       await Orders.update(
         { status: "complete" },
         { where: { TransactionId: id } }
@@ -511,10 +544,8 @@ exports.checkoutConfirm = async (req, res) => {
       res.status(200).json({ success: true, msg: "checkout confirm complete" });
     }
   } catch (err) {
-    console.log({ success: false, msg: "something went wrong!",error: err});
-    res
-      .status(400)
-      .json({ success: false, msg: "something went wrong!"});
+    console.log({ success: false, msg: "something went wrong!", error: err });
+    res.status(400).json({ success: false, msg: "something went wrong!" });
   }
 };
 

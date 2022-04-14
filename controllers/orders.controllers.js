@@ -158,13 +158,11 @@ exports.createUserOrder = async (req, res) => {
           UserId: UserId,
         })
           .then((response) => {
-            res
-              .status(200)
-              .json({
-                success: true,
-                msg: "create order successfully",
-                data: response,
-              });
+            res.status(200).json({
+              success: true,
+              msg: "create order successfully",
+              data: response,
+            });
           })
           .catch((err) => {
             if (err) {
@@ -217,7 +215,9 @@ exports.checkoutOrder = async (req, res) => {
           },
         }
       ).then(() => {
-        res.status(200).json({ success: true, msg: "checkout orders successfuly!" });
+        res
+          .status(200)
+          .json({ success: true, msg: "checkout orders successfuly!" });
       });
     } else {
       const transaction = await Transactions.create({ UserId: UserId });
@@ -237,7 +237,9 @@ exports.checkoutOrder = async (req, res) => {
             },
           }
         ).then(() => {
-          res.status(200).json({ success: true, msg: "checkout orders successfuly!" });
+          res
+            .status(200)
+            .json({ success: true, msg: "checkout orders successfuly!" });
         });
       }
     }
@@ -333,6 +335,44 @@ exports.getCompleteOrders = async (req, res) => {
     console.log({
       success: false,
       msg: `error at order controller "getCompleteOrders" : ${err}`,
+    });
+    response
+      .status(400)
+      .json({ success: false, msg: "can't get complete orders" });
+  }
+};
+
+exports.getBenefitCompleteOrders = async (req, res) => {
+  try {
+    const reqUserId = req.user.id;
+    const complete = await Orders.findAll({
+      where: { status: "complete" },
+      attributes: ['price', 'id', 'UserId', 'updatedAt'],
+      include: [
+        {
+          model: Images,
+          where: { UserId: reqUserId },
+          require: true,
+          attributes: ["UserId"],
+        },
+      ],
+      raw: true,
+    });
+
+    if (complete.length != 0) {
+      let totalItem = complete.length;
+      res.status(200).json({
+        success: true,
+        msg: "get order success",
+        data: { complete, totalItem },
+      });
+    } else {
+      res.status(201).json({ success: false, msg: "have no order complete" });
+    }
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: `error at order controller "getbenefitCompleteOrders" : ${err}`,
     });
     response
       .status(400)
