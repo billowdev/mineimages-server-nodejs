@@ -1,4 +1,4 @@
-const { Users, Addresses, PaymentUsers } = require("../models");
+const { Users, Addresses } = require("../models");
 const bcrypt = require("bcrypt");
 const { createTokens } = require("../middlewares/AuthMiddleware");
 const { sign, verify } = require("jsonwebtoken");
@@ -81,15 +81,7 @@ exports.activateAccount = (req, res) => {
                   country: "",
                   UserId: data.id,
                 });
-                // hook field on PaymentUsers
-                PaymentUsers.create({
-                  provider: "",
-                  cardNumber: "",
-                  expiryDate: "",
-                  securityCode: "",
-                  UserId: data.id,
-                });
-
+             
                 return res.status(200).send("USER REGISTER SUCCESSFULY");
               })
               .catch((err) => {

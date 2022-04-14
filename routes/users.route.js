@@ -29,9 +29,6 @@ router.get("/images", validateToken, getImagesUser);
 router.get("/", validateToken, getDataUserController);
 // router.get("/", getTestApi);
 
-// ----------------- POST TO update payment route  ----------------- \\
-router.post("/payment", validateToken, createPaymentUser);
-
 // ----------------- POST TO update address route ----------------- \\
 router.post("/address", validateToken, createAddressUser);
 

@@ -17,8 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     Transactions.hasMany(models.Orders, {
       onDelete: "cascade"
     });
-
-    
   };
 
   return Transactions;
