@@ -9,29 +9,27 @@ const {
   getAllImage,
   getImageDetail,
   patchImageData,
-  patchDeleteImage
+  patchDeleteImage,
+  getAllImageUserOwned
 } = require("../controllers/images.controllers");
 
-
-router.get("/all", getAllImage);  // display to public
-router.get("/", getAllImage);  // display to public
+router.get("/all", getAllImage); // display to public
+router.get("/", getAllImage); // display to public
 
 router.get("/search", getAllImage);
 
-router.post("/detail", getImageDetail);
+router.get("/all/owned", validateToken, getAllImageUserOwned);
 
+router.post("/detail", getImageDetail);
 
 router.get("/byId/:id", getImageById);
 
 router.post("/", createImageUser);
 
-router.post("/upload", validateToken,  uploadImageByUser);
+router.post("/upload", validateToken, uploadImageByUser);
 
 router.patch("/", validateToken, patchImageData);
 
 router.patch("/delete", validateToken, patchDeleteImage);
-
-
-
 
 module.exports = router;

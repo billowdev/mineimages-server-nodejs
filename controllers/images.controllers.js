@@ -232,7 +232,7 @@ exports.uploadImageAvartar = async (req, res) => {
 
 exports.getAllImage = async (req, res) => {
   const image = await Images.findAll({
-    where: { visible: "public", status: "active", remove:'NO'},
+    where: { visible: "public", status: "active", remove: "NO" },
     raw: true,
   });
   let data = [];
@@ -298,5 +298,29 @@ exports.patchDeleteImage = async (req, res) => {
   } catch (err) {
     console.log({ success: false, msg: "on images controller", error: err });
     res.status(400).json({ success: false, msg: "can't delete images" });
+  }
+};
+
+exports.getAllImageUserOwned = async (req, res) => {
+  try {
+    const resp = await Images.findAll({ where: { UserId: req.user.id } });
+    if (resp.length != 0) {
+      res
+        .status(200)
+        .json({
+          success: true,
+          msg: "get images user owned success",
+          data: resp,
+        });
+    } else {
+      res.status(400).json({ success: false, msg: "user have no any images" });
+    }
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: "error on images controllers",
+      error: err,
+    });
+    res.status(400).json({ success: false, msg: "something went wrong!" });
   }
 };
