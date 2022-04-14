@@ -10,7 +10,8 @@ const {
   checkoutOrder,
   getOncartOrders,
   getCompleteOrders,
-  getBenefitCompleteOrders
+  getBenefitCompleteOrders,
+  deleteOrders
 } = require("../controllers/orders.controllers");
 
 router.get("/", validateToken, getAllOrders);
@@ -18,6 +19,7 @@ router.get("/", validateToken, getAllOrders);
 router.get("/cart", validateToken, getOncartOrders);
 router.get("/complete", validateToken, getCompleteOrders);
 router.get("/complete/benefit", validateToken, getBenefitCompleteOrders);
+router.patch("/delete", validateToken, deleteOrders);
 
 router.post("/", validateToken, createUserOrder);
 

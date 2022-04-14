@@ -380,25 +380,21 @@ exports.getBenefitCompleteOrders = async (req, res) => {
   }
 };
 
-// ===========================================================
-
-// const listOrderOncart = await Orders.findAll({
-//   where: { UserId: UserId, status: "oncart" },
-// });
-
-// const listOrderComplete = await Orders.findAll({
-//   where: { UserId: UserId, status: "complete" },
-// });
-
-// const listOrderTransaction = await Orders.findAll({
-//   where: { UserId: UserId, status: "transaction" },
-// });
-
-// const response = {
-//   order: {
-//     oncart: listOrderOncart,
-//     complete: listOrderComplete,
-//     transaction: listOrderTransaction,
-//   },
-// }
-// res.json(response);
+exports.deleteOrders  = async (req, res) => {
+  try {
+    const resp = await Orders.destroy({where:{id:req.params.id}})
+    if(resp){
+      res.status(200).json({success:true, msg:"delete success"})
+    }else{
+      res.status(400).json({success:false, msg:"delete failed"})
+    }
+  } catch (err) {
+    console.log({
+      success: false,
+      msg: `error at order controller orders " : ${err}`,
+    });
+    response
+      .status(400)
+      .json({ success: false, msg: "can't delete order" });
+  }
+};
