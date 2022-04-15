@@ -99,8 +99,10 @@ Mineimages project is the project in the web programming for a local community p
 
 * [React.js](https://reactjs.org/)
 * [React Redux](https://react-redux.js.org/)
-* [Bootstrap](https://getbootstrap.com)
-
+* [Bootstrap](https://getbootstrap.com/)
+* [NodeJs](https://nodejs.org/)
+* [Sequelize](https://sequelize.org/)
+* [MySQL](https://www.mysql.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
