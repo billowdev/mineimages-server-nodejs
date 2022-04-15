@@ -147,10 +147,10 @@ This is an example of how to list things you need to use the software and how to
    DB_DATABASE=mineimages_db
    DB_HOST=localhost
 
-  // === Optional email verification === 
-  JWT_ACC_ACTIVATE="Your jwt acc or random thing"
-  MAILGUN_DOMAIN_NAME="Mail gun domain name" 
-  MAINGUN_API_KEY="Mail gun api key" 
+   Optional email verification
+   JWT_ACC_ACTIVATE="Your jwt acc or random thing"
+   MAILGUN_DOMAIN_NAME="Mail gun domain name" 
+   MAINGUN_API_KEY="Mail gun api key" 
 
 
    ```
@@ -398,5 +398,5 @@ _For project documentation (Thai Language) [Documentation](./README/Document/ก
 [license-shield]: https://img.shields.io/github/license/lacakp/mineimages-server.svg?style=for-the-badge
 [license-url]: https://github.com/lacakp/mineimages-server/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/lacakp
+[linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
