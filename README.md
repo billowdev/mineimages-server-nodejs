@@ -25,9 +25,6 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -37,7 +34,6 @@
 
 <h3 align="center">MineImages</h3>
 
-<h3 align="center">project_title</h3>
 
   <p align="center">
     Mineimages project is the project in the web programming concept CRUD goals for learning new things this project has used the React-Redux for client-side and server-side is used Node js with MySQL Sequelize other features are upload image to Cloudinary use Jimp package to put watermark to picture and a few things what I learn from this project are system analysis Data Flow Diagram ER-Diagram Database Design and school project document
@@ -163,7 +159,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 #### For client Side repositoty
-[MineImages-Client](https://github.com/lacakp/mineimages-client)
+[mineimages-client](https://github.com/lacakp/mineimages-client)
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -391,15 +387,15 @@ _For project documentation (Thai Language) [Documentation](./README/Document/ก
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/lacakp/mineimages-client.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/lacakp/mineimages-server.svg?style=for-the-badge
 [contributors-url]: https://github.com/lacakp/mineimages-server/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/lacakp/mineimages-client.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/lacakp/mineimages-server.svg?style=for-the-badge
 [forks-url]: https://github.com/lacakp/mineimages-server/network/members
-[stars-shield]: https://img.shields.io/github/stars/lacakp/mineimages-client.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/lacakp/mineimages-server.svg?style=for-the-badge
 [stars-url]: https://github.com/lacakp/mineimages-server/stargazers
-[issues-shield]: https://img.shields.io/github/issues/lacakp/mineimages-client.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/lacakp/mineimages-server.svg?style=for-the-badge
 [issues-url]: https://github.com/lacakp/mineimages-server/issues
-[license-shield]: https://img.shields.io/github/license/lacakp/mineimages-client.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/lacakp/mineimages-server.svg?style=for-the-badge
 [license-url]: https://github.com/lacakp/mineimages-server/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/lacakp
