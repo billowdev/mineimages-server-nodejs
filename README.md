@@ -198,12 +198,8 @@ Don't forget to give the project a star! Thanks again!
 
 
 <!-- LICENSE -->
-## License
+<!-- ## License -->
 
-This project has parts of AdminLTE  integrated in the admin page
-
-AdminLTE is an open source project by [AdminLTE.io](https://adminlte.io) that is licensed under [MIT](https://opensource.org/licenses/MIT).
-AdminLTE.io reserves the right to change the license of future releases.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
