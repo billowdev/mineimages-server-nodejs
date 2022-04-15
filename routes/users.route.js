@@ -24,7 +24,6 @@ router.get("/profile/:userId", validateToken, getPublicProfile);
 // ----------------- GET OWN IMAGES DATA ----------------- \\
 router.get("/images", validateToken, getImagesUser);
 
-
 // ----------------- GET DATA USER WHO SIGN IN (RES TO PROFILE PAGE) route ----------------- \\
 router.get("/", validateToken, getDataUserController);
 // router.get("/", getTestApi);
