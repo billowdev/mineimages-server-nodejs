@@ -28,7 +28,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/lacakp/mineimages-server">
+  <a href="https://github.com/lacakira/mineimages-server">
     <img src="./README/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -38,14 +38,14 @@
   <p align="center">
     Mineimages project is the project in the web programming concept CRUD goals for learning new things this project has used the React-Redux for client-side and server-side is used Node js with MySQL Sequelize other features are upload image to Cloudinary use Jimp package to put watermark to picture and a few things what I learn from this project are system analysis Data Flow Diagram ER-Diagram Database Design and school project document
     <br />
-    <!-- <a href="https://github.com/lacakp/mineimages-server"><strong>Explore the docs »</strong></a> -->
+    <!-- <a href="https://github.com/lacakira/mineimages-server"><strong>Explore the docs »</strong></a> -->
     <br />
     <br />
-    <a href="https://github.com/lacakp/mineimages-server">View Demo</a>
+    <a href="https://github.com/lacakira/mineimages-server">View Demo</a>
     ·
-    <a href="https://github.com/lacakp/mineimages-server/issues">Report Bug</a>
+    <a href="https://github.com/lacakira/mineimages-server/issues">Report Bug</a>
     ·
-    <a href="https://github.com/lacakp/mineimages-server/issues">Request Feature</a>
+    <a href="https://github.com/lacakira/mineimages-server/issues">Request Feature</a>
   </p>
 </div>
 
@@ -128,7 +128,7 @@ This is an example of how to list things you need to use the software and how to
 1. Try cloudinary API at [cloudinary](https://cloudinary.com/)
 2. Clone the repo
    ```sh
-   git clone https://github.com/lacakp/mineimages-server.git
+   git clone https://github.com/lacakira/mineimages-server.git
    ```
 3. Install NPM packages
    ```sh
@@ -161,7 +161,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 #### For client Side repositoty
-[mineimages-client](https://github.com/lacakp/mineimages-client)
+[mineimages-client](https://github.com/lacakira/mineimages-client)
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -171,7 +171,7 @@ This is an example of how to list things you need to use the software and how to
 - [ ] Persist state avoid dispatch wheel
 - [ ] Integrated payment gateway
 
-See the [open issues](https://github.com/lacakp/mineimages-server/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/lacakira/mineimages-server/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -205,9 +205,9 @@ Don't forget to give the project a star! Thanks again!
 <!-- CONTACT -->
 ## Contact
 
-Akkarapon Phikulsri - lacakp.contact@gmail.com  - [lacakp's site](https://lacakp.github.io/portfolio) 
+Akkarapon Phikulsri - lacakira@gmail.com  - [lacakira's site](https://lacakira.github.io/portfolio) 
 
-Project Link: [https://github.com/lacakp/mineimages-server](https://github.com/lacakp/mineimages-server)
+Project Link: [https://github.com/lacakira/mineimages-server](https://github.com/lacakira/mineimages-server)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -216,33 +216,6 @@ Project Link: [https://github.com/lacakp/mineimages-server](https://github.com/l
 
 <!-- USAGE EXAMPLES -->
 ## Implementation
-
-
-_For project documentation (Thai Language) [Documentation](./README/document/การพัฒนาเว็บแอพพลิเคชันขายรูปภาพ.pdf)_
-
-
-
-### Data Flow Diagram
-
-#### - Context Diagram
-<div align="center">
-<img src="./README/images/system-analysis/context.png" alt="context" width="600">
-</div>
-
-<!-- #### - DFD LV 0 Guest Users -->
-<!-- <div align="center">
-<img src="./README/images/system-analysis/lv-0-guest-users.png" alt="lv-0-guest-users" width="800">
-</div>  -->
-
-<!-- #### - DFD LV 0 Member Users -->
-<!-- <div align="center">
-<img src="./README/images/system-analysis/lv-0-member.png" alt="lv-0-member" width="800">
-</div>  -->
-
-<!-- #### - DFD LV 0 Admin -->
-<!-- <div align="center">
-<img src="./README/images/system-analysis/lv-0-admin.png" alt="lv-0-admin" width="800">
-</div>  -->
 
 ### ER-Diagram
 <div align="center">
@@ -389,16 +362,16 @@ _For project documentation (Thai Language) [Documentation](./README/document/ก
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/lacakp/mineimages-server.svg?style=for-the-badge
-[contributors-url]: https://github.com/lacakp/mineimages-server/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/lacakp/mineimages-server.svg?style=for-the-badge
-[forks-url]: https://github.com/lacakp/mineimages-server/network/members
-[stars-shield]: https://img.shields.io/github/stars/lacakp/mineimages-server.svg?style=for-the-badge
-[stars-url]: https://github.com/lacakp/mineimages-server/stargazers
-[issues-shield]: https://img.shields.io/github/issues/lacakp/mineimages-server.svg?style=for-the-badge
-[issues-url]: https://github.com/lacakp/mineimages-server/issues
-[license-shield]: https://img.shields.io/github/license/lacakp/mineimages-server.svg?style=for-the-badge
-[license-url]: https://github.com/lacakp/mineimages-server/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/lacakira/mineimages-server.svg?style=for-the-badge
+[contributors-url]: https://github.com/lacakira/mineimages-server/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/lacakira/mineimages-server.svg?style=for-the-badge
+[forks-url]: https://github.com/lacakira/mineimages-server/network/members
+[stars-shield]: https://img.shields.io/github/stars/lacakira/mineimages-server.svg?style=for-the-badge
+[stars-url]: https://github.com/lacakira/mineimages-server/stargazers
+[issues-shield]: https://img.shields.io/github/issues/lacakira/mineimages-server.svg?style=for-the-badge
+[issues-url]: https://github.com/lacakira/mineimages-server/issues
+[license-shield]: https://img.shields.io/github/license/lacakira/mineimages-server.svg?style=for-the-badge
+[license-url]: https://github.com/lacakira/mineimages-server/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
